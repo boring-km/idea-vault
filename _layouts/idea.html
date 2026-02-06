@@ -1,0 +1,34 @@
+---
+layout: default
+---
+
+<article class="idea-page">
+  <div class="idea-header">
+    <a href="{{ '/' | relative_url }}" class="back-link">&larr; 목록으로 돌아가기</a>
+    <h1>{{ page.title }}</h1>
+    <div class="idea-meta">
+      <span class="status-badge status-{{ page.status }}">
+        {% if page.status == 'backlog' %}Backlog
+        {% elsif page.status == 'in-progress' %}In Progress
+        {% elsif page.status == 'done' %}Done
+        {% else %}{{ page.status }}
+        {% endif %}
+      </span>
+      <span class="idea-date">{{ page.date | date: "%Y년 %m월 %d일" }}</span>
+    </div>
+    {% if page.tags %}
+    <div class="idea-tags">
+      {% for tag in page.tags %}
+      <span class="tag">#{{ tag }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if page.summary %}
+    <p class="idea-summary">{{ page.summary }}</p>
+    {% endif %}
+  </div>
+
+  <div class="idea-content">
+    {{ content }}
+  </div>
+</article>

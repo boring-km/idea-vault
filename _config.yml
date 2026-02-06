@@ -1,0 +1,18 @@
+title: Idea Vault
+description: 아이디어를 기록하고, 발전시키고, 관련 자료를 모아두는 저장소
+baseurl: /idea-vault
+url: https://boring-km.github.io
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+permalink: pretty
+
+exclude:
+  - README.md
+  - templates/
+  - resources/
+  - .omc/
+  - Gemfile
+  - Gemfile.lock
+  - LICENSE

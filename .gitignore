@@ -11,3 +11,11 @@ Thumbs.db
 # Temporary
 *.tmp
 *.bak
+
+# Jekyll
+_site/
+.jekyll-cache/
+.jekyll-metadata
+
+# OMC
+.omc/
