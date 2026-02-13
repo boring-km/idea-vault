@@ -28,18 +28,17 @@ layout: default
 </div>
 
 {% assign ideas = site.pages | where_exp: "page", "page.layout == 'idea'" %}
-{% assign backlog = ideas | where: "status", "backlog" | sort: "date" | reverse %}
-{% assign in_progress = ideas | where: "status", "in-progress" | sort: "date" | reverse %}
-{% assign done = ideas | where: "status", "done" | sort: "date" | reverse %}
+{% assign active_ideas = ideas | where_exp: "page", "page.url contains '/backlog/'" %}
+{% assign archived_ideas = ideas | where_exp: "page", "page.url contains '/archived/'" %}
+{% assign backlog = active_ideas | where: "status", "backlog" | sort: "date" | reverse %}
+{% assign in_progress = active_ideas | where: "status", "in-progress" | sort: "date" | reverse %}
+{% assign done = active_ideas | where: "status", "done" | sort: "date" | reverse %}
+{% assign archived = archived_ideas | sort: "date" | reverse %}
 
 <div class="stats">
   <div class="stat-item">
-    <div class="stat-number">{{ ideas.size }}</div>
-    <div class="stat-label">전체 아이디어</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-number">{{ backlog.size }}</div>
-    <div class="stat-label">백로그</div>
+    <div class="stat-number">{{ active_ideas.size }}</div>
+    <div class="stat-label">활성 아이디어</div>
   </div>
   <div class="stat-item">
     <div class="stat-number">{{ in_progress.size }}</div>
@@ -48,6 +47,10 @@ layout: default
   <div class="stat-item">
     <div class="stat-number">{{ done.size }}</div>
     <div class="stat-label">완료</div>
+  </div>
+  <div class="stat-item stat-item-archived">
+    <div class="stat-number">{{ archived.size }}</div>
+    <div class="stat-label">보관됨</div>
   </div>
 </div>
 
@@ -138,6 +141,38 @@ layout: default
             <span class="priority-add-btn" title="우선순위 추가">+</span>
             {% endif %}
           </span>
+          {% for tag in idea.tags %}
+          <span class="tag">#{{ tag }}</span>
+          {% endfor %}
+        </div>
+        <span class="idea-card-date">{{ idea.date | date: "%Y.%m.%d" }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if archived.size > 0 %}
+<section class="idea-section archived-section">
+  <h2 class="section-title archived-toggle" id="archivedToggle">
+    <span class="dot dot-archived"></span> 보관된 아이디어 ({{ archived.size }})
+    <span class="toggle-icon">&#9660;</span>
+  </h2>
+  <div class="idea-grid archived-grid" id="archivedGrid" style="display: none;">
+    {% for idea in archived %}
+    <div class="idea-card archived-card" data-priority="{% if idea.priority %}{{ idea.priority }}{% else %}unset{% endif %}" data-date="{{ idea.date | date: '%Y%m%d' }}">
+      <div class="idea-card-title">
+        <a href="{{ idea.url | relative_url }}">{{ idea.title }}</a>
+      </div>
+      {% if idea.summary %}
+      <div class="idea-card-summary">{{ idea.summary }}</div>
+      {% endif %}
+      <div class="idea-card-footer">
+        <div class="idea-card-tags">
+          {% if idea.priority %}
+          <span class="priority-badge priority-{{ idea.priority }}">P{{ idea.priority }}</span>
+          {% endif %}
           {% for tag in idea.tags %}
           <span class="tag">#{{ tag }}</span>
           {% endfor %}
@@ -400,5 +435,16 @@ layout: default
 
   // Initialize on load
   initializePriorities();
+
+  // Archived section toggle
+  const archivedToggle = document.getElementById('archivedToggle');
+  const archivedGrid = document.getElementById('archivedGrid');
+  if (archivedToggle && archivedGrid) {
+    archivedToggle.addEventListener('click', function() {
+      const isHidden = archivedGrid.style.display === 'none';
+      archivedGrid.style.display = isHidden ? '' : 'none';
+      this.classList.toggle('open', isHidden);
+    });
+  }
 })();
 </script>

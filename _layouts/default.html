@@ -607,6 +607,7 @@
     .dot-backlog { background: var(--backlog); }
     .dot-in-progress { background: var(--in-progress); }
     .dot-done { background: var(--done); }
+    .dot-archived { background: #94a3b8; }
 
     /* ── Idea Cards ── */
     .idea-grid {
@@ -738,6 +739,41 @@
 
     .idea-content h2:first-child {
       margin-top: 0;
+    }
+
+    /* ── Archived Section ── */
+    .stat-item-archived .stat-number {
+      color: #94a3b8;
+    }
+
+    .archived-toggle {
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s;
+    }
+
+    .archived-toggle:hover {
+      color: var(--primary);
+    }
+
+    .toggle-icon {
+      font-size: 0.75rem;
+      margin-left: auto;
+      transition: transform 0.3s;
+      color: var(--text-secondary);
+    }
+
+    .archived-toggle.open .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .archived-card {
+      opacity: 0.6;
+      border-style: dashed;
+    }
+
+    .archived-card:hover {
+      opacity: 0.85;
     }
 
     /* ── Empty State ── */
