@@ -197,8 +197,8 @@ layout: default
 
   const filterBtns = document.querySelectorAll('.filter-btn');
   const sortSelect = document.getElementById('sortSelect');
-  const ideaCards = document.querySelectorAll('.idea-card');
-  const ideaSections = document.querySelectorAll('.idea-section');
+  const ideaCards = document.querySelectorAll('.idea-card:not(.archived-card)');
+  const ideaSections = document.querySelectorAll('.idea-section:not(.archived-section)');
 
   let currentFilter = 'all';
   let currentSort = 'date';
