@@ -7,6 +7,26 @@ layout: default
   <p>아이디어를 기록하고, 발전시키고, 관련 자료를 모아두는 공간</p>
 </div>
 
+<div class="controls">
+  <div class="control-group">
+    <label class="control-label">우선순위 필터</label>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-priority="all">전체</button>
+      <button class="filter-btn" data-priority="1">높음</button>
+      <button class="filter-btn" data-priority="2">중간</button>
+      <button class="filter-btn" data-priority="3">낮음</button>
+      <button class="filter-btn" data-priority="unset">미설정</button>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">정렬</label>
+    <select class="sort-select" id="sortSelect">
+      <option value="date">최신순</option>
+      <option value="priority">우선순위순</option>
+    </select>
+  </div>
+</div>
+
 {% assign ideas = site.pages | where_exp: "page", "page.layout == 'idea'" %}
 {% assign backlog = ideas | where: "status", "backlog" | sort: "date" | reverse %}
 {% assign in_progress = ideas | where: "status", "in-progress" | sort: "date" | reverse %}
@@ -36,7 +56,7 @@ layout: default
   <h2 class="section-title"><span class="dot dot-in-progress"></span> 진행 중</h2>
   <div class="idea-grid">
     {% for idea in in_progress %}
-    <div class="idea-card">
+    <div class="idea-card" data-priority="{% if idea.priority %}{{ idea.priority }}{% else %}unset{% endif %}" data-date="{{ idea.date | date: '%Y%m%d' }}">
       <div class="idea-card-title">
         <a href="{{ idea.url | relative_url }}">{{ idea.title }}</a>
       </div>
@@ -45,6 +65,9 @@ layout: default
       {% endif %}
       <div class="idea-card-footer">
         <div class="idea-card-tags">
+          {% if idea.priority %}
+          <span class="priority-badge priority-{{ idea.priority }}">P{{ idea.priority }}</span>
+          {% endif %}
           {% for tag in idea.tags %}
           <span class="tag">#{{ tag }}</span>
           {% endfor %}
@@ -62,7 +85,7 @@ layout: default
   <h2 class="section-title"><span class="dot dot-backlog"></span> 백로그</h2>
   <div class="idea-grid">
     {% for idea in backlog %}
-    <div class="idea-card">
+    <div class="idea-card" data-priority="{% if idea.priority %}{{ idea.priority }}{% else %}unset{% endif %}" data-date="{{ idea.date | date: '%Y%m%d' }}">
       <div class="idea-card-title">
         <a href="{{ idea.url | relative_url }}">{{ idea.title }}</a>
       </div>
@@ -71,6 +94,9 @@ layout: default
       {% endif %}
       <div class="idea-card-footer">
         <div class="idea-card-tags">
+          {% if idea.priority %}
+          <span class="priority-badge priority-{{ idea.priority }}">P{{ idea.priority }}</span>
+          {% endif %}
           {% for tag in idea.tags %}
           <span class="tag">#{{ tag }}</span>
           {% endfor %}
@@ -88,7 +114,7 @@ layout: default
   <h2 class="section-title"><span class="dot dot-done"></span> 완료</h2>
   <div class="idea-grid">
     {% for idea in done %}
-    <div class="idea-card">
+    <div class="idea-card" data-priority="{% if idea.priority %}{{ idea.priority }}{% else %}unset{% endif %}" data-date="{{ idea.date | date: '%Y%m%d' }}">
       <div class="idea-card-title">
         <a href="{{ idea.url | relative_url }}">{{ idea.title }}</a>
       </div>
@@ -97,6 +123,9 @@ layout: default
       {% endif %}
       <div class="idea-card-footer">
         <div class="idea-card-tags">
+          {% if idea.priority %}
+          <span class="priority-badge priority-{{ idea.priority }}">P{{ idea.priority }}</span>
+          {% endif %}
           {% for tag in idea.tags %}
           <span class="tag">#{{ tag }}</span>
           {% endfor %}
@@ -114,3 +143,78 @@ layout: default
   <p>아직 등록된 아이디어가 없습니다.</p>
 </div>
 {% endif %}
+
+<script>
+(function() {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const sortSelect = document.getElementById('sortSelect');
+  const ideaCards = document.querySelectorAll('.idea-card');
+  const ideaSections = document.querySelectorAll('.idea-section');
+
+  let currentFilter = 'all';
+  let currentSort = 'date';
+
+  // Filter functionality
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      currentFilter = this.dataset.priority;
+      applyFilterAndSort();
+    });
+  });
+
+  // Sort functionality
+  sortSelect.addEventListener('change', function() {
+    currentSort = this.value;
+    applyFilterAndSort();
+  });
+
+  function applyFilterAndSort() {
+    // Filter cards
+    ideaCards.forEach(card => {
+      const cardPriority = card.dataset.priority;
+      if (currentFilter === 'all' || cardPriority === currentFilter) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Sort cards within each section
+    ideaSections.forEach(section => {
+      const grid = section.querySelector('.idea-grid');
+      if (!grid) return;
+
+      const cards = Array.from(grid.querySelectorAll('.idea-card'));
+      const visibleCards = cards.filter(card => card.style.display !== 'none');
+
+      if (visibleCards.length === 0) {
+        section.style.display = 'none';
+        return;
+      } else {
+        section.style.display = '';
+      }
+
+      visibleCards.sort((a, b) => {
+        if (currentSort === 'priority') {
+          const priorityA = a.dataset.priority === 'unset' ? 999 : parseInt(a.dataset.priority);
+          const priorityB = b.dataset.priority === 'unset' ? 999 : parseInt(b.dataset.priority);
+
+          if (priorityA !== priorityB) {
+            return priorityA - priorityB; // Lower priority number = higher priority
+          }
+          // If same priority, sort by date (newest first)
+          return parseInt(b.dataset.date) - parseInt(a.dataset.date);
+        } else {
+          // Sort by date (newest first)
+          return parseInt(b.dataset.date) - parseInt(a.dataset.date);
+        }
+      });
+
+      // Reorder DOM elements
+      visibleCards.forEach(card => grid.appendChild(card));
+    });
+  }
+})();
+</script>

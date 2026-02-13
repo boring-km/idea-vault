@@ -3,6 +3,7 @@ layout: idea
 title: "중고거래 시세 조회 서비스"
 date: 2026-02-10
 status: backlog
+priority: 3
 tags: [중고거래, 데이터, 크롤링, 시세, 앱]
 summary: "당근마켓/번개장터/중고나라의 실거래 데이터를 수집·분석하여 중고 물건의 적정 시세를 알려주는 서비스"
 ---

@@ -14,6 +14,9 @@ layout: default
         {% else %}{{ page.status }}
         {% endif %}
       </span>
+      {% if page.priority %}
+      <span class="priority-badge priority-{{ page.priority }}">P{{ page.priority }}</span>
+      {% endif %}
       <span class="idea-date">{{ page.date | date: "%Y년 %m월 %d일" }}</span>
     </div>
     {% if page.tags %}
