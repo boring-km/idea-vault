@@ -2,7 +2,7 @@
 layout: idea
 title: "페스티벌 플래너 - 전국 축제 통합 캘린더 & 여행 매칭"
 date: 2026-02-13
-status: backlog
+status: archived
 priority: 3
 author: 정한나
 tags: [플랫폼, 축제, 캘린더, 여행, 매칭]

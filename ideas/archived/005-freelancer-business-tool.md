@@ -2,7 +2,7 @@
 layout: idea
 title: "프리랜서 비즈니스 올인원 툴"
 date: 2026-02-10
-status: backlog
+status: archived
 priority: 1
 tags: [SaaS, 프리랜서, 자동화, 세무, 계약관리]
 summary: "견적서/계약서 자동 생성, 인보이스 발행, 입금 추적, 세금 계산을 한 곳에서 해결하는 한국 프리랜서 특화 비즈니스 도구"

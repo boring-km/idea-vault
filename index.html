@@ -29,7 +29,7 @@ layout: default
 
 {% assign ideas = site.pages | where_exp: "page", "page.layout == 'idea'" %}
 {% assign active_ideas = ideas | where_exp: "page", "page.url contains '/backlog/'" %}
-{% assign archived_ideas = ideas | where_exp: "page", "page.url contains '/archived/'" %}
+{% assign archived_ideas = ideas | where: "status", "archived" %}
 {% assign backlog = active_ideas | where: "status", "backlog" | sort: "date" | reverse %}
 {% assign in_progress = active_ideas | where: "status", "in-progress" | sort: "date" | reverse %}
 {% assign done = active_ideas | where: "status", "done" | sort: "date" | reverse %}

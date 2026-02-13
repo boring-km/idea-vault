@@ -2,7 +2,7 @@
 layout: idea
 title: "숏폼 콘텐츠 자동 편집 서비스"
 date: 2026-02-10
-status: backlog
+status: archived
 priority: 3
 tags: [AI, 영상편집, 숏폼, 자동화, 크리에이터]
 summary: "유튜브 긴 영상 URL만 넣으면 AI가 하이라이트 추출 → 세로 크롭 → 자막 생성 → 숏폼 영상을 자동 제작하는 서비스"

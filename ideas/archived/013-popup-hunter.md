@@ -2,7 +2,7 @@
 layout: idea
 title: "팝업 헌터 (Popup Hunter) - 로컬 팝업스토어 & 축제 실시간 지도"
 date: 2026-02-13
-status: backlog
+status: archived
 priority: 3
 author: 정한나
 tags: [플랫폼, 팝업스토어, 지도, 실시간, 트렌드]

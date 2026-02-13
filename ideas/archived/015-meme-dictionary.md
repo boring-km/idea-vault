@@ -2,7 +2,7 @@
 layout: idea
 title: "밈(Meme) 사전 - 트렌드 마케터를 위한 유행어 위키"
 date: 2026-02-13
-status: backlog
+status: archived
 priority: 2
 author: 정한나
 tags: [콘텐츠, 밈, 트렌드, 마케팅, 위키]

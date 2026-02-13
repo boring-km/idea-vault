@@ -2,7 +2,7 @@
 layout: idea
 title: "우동공 (우리 동네 공방) - 전국 공방 위치 & 보유 장비 지도"
 date: 2026-02-13
-status: backlog
+status: archived
 priority: 3
 author: 정한나
 tags: [플랫폼, 공방, 메이커, 지도, 장비]

@@ -2,7 +2,7 @@
 layout: idea
 title: "미션 브릿지 (Mission Bridge) - 전국 교회 단기선교 정보 & 자원 공유 플랫폼"
 date: 2026-02-13
-status: backlog
+status: archived
 priority: 3
 author: 정한나
 tags: [플랫폼, 선교, 커뮤니티, 지도, 나눔]

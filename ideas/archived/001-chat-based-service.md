@@ -2,7 +2,7 @@
 layout: idea
 title: "채팅으로 서비스 이용 - 도메인 특화 AI 채팅 구독 서비스"
 date: 2026-02-07
-status: backlog
+status: archived
 priority: 1
 tags: [AI, 채팅, 구독제, SaaS, 버티컬AI]
 summary: "특정 도메인에 최적화된 Context를 미리 구성해둔 AI 채팅 서비스를 구독제로 제공하고, 일일 사용 횟수 제한 + 추가 과금 모델로 수익화"
