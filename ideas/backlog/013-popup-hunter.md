@@ -3,6 +3,7 @@ layout: idea
 title: "팝업 헌터 (Popup Hunter) - 로컬 팝업스토어 & 축제 실시간 지도"
 date: 2026-02-13
 status: backlog
+priority: 3
 author: 정한나
 tags: [플랫폼, 팝업스토어, 지도, 실시간, 트렌드]
 summary: "성수/홍대/강남 등 핫플레이스의 팝업스토어와 축제를 실시간 지도로 보여주고, 대기 현황과 테마별 필터로 효율적인 방문을 돕는 플랫폼"

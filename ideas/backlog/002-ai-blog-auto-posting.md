@@ -3,6 +3,7 @@ layout: idea
 title: "매일 아침 AI 대화 기반 블로그 자동 포스팅 시스템"
 date: 2026-02-07
 status: backlog
+priority: 2
 tags: [자동화, 블로그, AI, 광고수익, 파이프라인]
 summary: "매일 아침 AI와 대화를 통해 글감을 정하고, 자동으로 블로그 포스팅을 생성하여 광고 수익을 창출하는 자동화 파이프라인"
 ---

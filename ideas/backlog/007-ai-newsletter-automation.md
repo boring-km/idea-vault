@@ -3,6 +3,7 @@ layout: idea
 title: "AI 뉴스레터 자동화 플랫폼"
 date: 2026-02-10
 status: backlog
+priority: 2
 tags: [AI, 뉴스레터, 자동화, 미디어, 구독제]
 summary: "특정 분야 뉴스를 매일 자동 수집하고 AI가 요약·큐레이션하여 뉴스레터로 발송하는 1인 미디어 자동화 플랫폼"
 ---

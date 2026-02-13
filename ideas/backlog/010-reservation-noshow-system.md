@@ -3,7 +3,7 @@ layout: idea
 title: "소규모 예약 관리 + 노쇼 방지 시스템"
 date: 2026-02-10
 status: backlog
-priority: 2
+priority: 1
 tags: [SaaS, 예약관리, 노쇼, 소상공인, 자동화]
 summary: "네일샵/미용실/스튜디오 등 소규모 매장의 예약을 간편하게 관리하고, 자동 리마인더 + 노쇼 보증금으로 노쇼를 방지하는 시스템"
 ---

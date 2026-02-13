@@ -3,6 +3,7 @@ layout: idea
 title: "AI 상품 상세페이지 자동 생성기"
 date: 2026-02-10
 status: backlog
+priority: 1
 tags: [AI, 이커머스, 자동화, SaaS, 디자인]
 summary: "상품 사진과 간단한 정보만 입력하면 AI가 상세페이지 이미지와 카피를 자동 생성해주는 온라인 셀러 전용 서비스"
 ---

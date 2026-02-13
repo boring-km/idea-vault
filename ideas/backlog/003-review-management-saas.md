@@ -3,6 +3,7 @@ layout: idea
 title: "소상공인 리뷰 통합 관리 SaaS"
 date: 2026-02-10
 status: backlog
+priority: 3
 tags: [SaaS, AI, 소상공인, 리뷰관리, 자동화]
 summary: "네이버/구글/배민 등 흩어진 리뷰를 한 대시보드에서 통합 관리하고, AI가 답글 초안을 생성해주는 구독형 서비스"
 ---

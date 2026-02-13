@@ -3,6 +3,7 @@ layout: idea
 title: "AI 계약서 검토 서비스"
 date: 2026-02-10
 status: backlog
+priority: 1
 tags: [AI, 법률, 계약서, LLM, 리걸테크]
 summary: "계약서를 업로드하면 AI가 불리한 조항, 빠진 조항, 주의할 점을 분석하여 알려주는 리걸테크 서비스"
 ---

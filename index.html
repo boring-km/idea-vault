@@ -65,9 +65,13 @@ layout: default
       {% endif %}
       <div class="idea-card-footer">
         <div class="idea-card-tags">
-          {% if idea.priority %}
-          <span class="priority-badge priority-{{ idea.priority }}">P{{ idea.priority }}</span>
-          {% endif %}
+          <span class="priority-wrapper" data-url="{{ idea.url | relative_url }}">
+            {% if idea.priority %}
+            <span class="priority-badge priority-{{ idea.priority }}" data-priority="{{ idea.priority }}">P{{ idea.priority }}</span>
+            {% else %}
+            <span class="priority-add-btn" title="우선순위 추가">+</span>
+            {% endif %}
+          </span>
           {% for tag in idea.tags %}
           <span class="tag">#{{ tag }}</span>
           {% endfor %}
@@ -94,9 +98,13 @@ layout: default
       {% endif %}
       <div class="idea-card-footer">
         <div class="idea-card-tags">
-          {% if idea.priority %}
-          <span class="priority-badge priority-{{ idea.priority }}">P{{ idea.priority }}</span>
-          {% endif %}
+          <span class="priority-wrapper" data-url="{{ idea.url | relative_url }}">
+            {% if idea.priority %}
+            <span class="priority-badge priority-{{ idea.priority }}" data-priority="{{ idea.priority }}">P{{ idea.priority }}</span>
+            {% else %}
+            <span class="priority-add-btn" title="우선순위 추가">+</span>
+            {% endif %}
+          </span>
           {% for tag in idea.tags %}
           <span class="tag">#{{ tag }}</span>
           {% endfor %}
@@ -123,9 +131,13 @@ layout: default
       {% endif %}
       <div class="idea-card-footer">
         <div class="idea-card-tags">
-          {% if idea.priority %}
-          <span class="priority-badge priority-{{ idea.priority }}">P{{ idea.priority }}</span>
-          {% endif %}
+          <span class="priority-wrapper" data-url="{{ idea.url | relative_url }}">
+            {% if idea.priority %}
+            <span class="priority-badge priority-{{ idea.priority }}" data-priority="{{ idea.priority }}">P{{ idea.priority }}</span>
+            {% else %}
+            <span class="priority-add-btn" title="우선순위 추가">+</span>
+            {% endif %}
+          </span>
           {% for tag in idea.tags %}
           <span class="tag">#{{ tag }}</span>
           {% endfor %}
@@ -146,6 +158,8 @@ layout: default
 
 <script>
 (function() {
+  const STORAGE_KEY = 'idea-vault-priorities';
+
   const filterBtns = document.querySelectorAll('.filter-btn');
   const sortSelect = document.getElementById('sortSelect');
   const ideaCards = document.querySelectorAll('.idea-card');
@@ -153,6 +167,174 @@ layout: default
 
   let currentFilter = 'all';
   let currentSort = 'date';
+  let activePicker = null;
+
+  // ── localStorage helpers ──
+  function getPriorities() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : {};
+    } catch (e) {
+      console.error('Failed to load priorities:', e);
+      return {};
+    }
+  }
+
+  function savePriorities(priorities) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(priorities));
+    } catch (e) {
+      console.error('Failed to save priorities:', e);
+    }
+  }
+
+  function setPriority(url, priority) {
+    const priorities = getPriorities();
+    if (priority === null) {
+      delete priorities[url];
+    } else {
+      priorities[url] = priority;
+    }
+    savePriorities(priorities);
+  }
+
+  function getEffectivePriority(card) {
+    const url = card.querySelector('.priority-wrapper').dataset.url;
+    const priorities = getPriorities();
+    const storedPriority = priorities[url];
+
+    if (storedPriority !== undefined) {
+      return storedPriority === null ? 'unset' : String(storedPriority);
+    }
+
+    return card.dataset.priority;
+  }
+
+  // ── Priority Picker ──
+  function createPriorityPicker() {
+    const picker = document.createElement('div');
+    picker.className = 'priority-picker';
+    picker.innerHTML = `
+      <div class="priority-option" data-priority="1">
+        <span class="priority-option-badge p1">P1</span>
+        <span>높음</span>
+      </div>
+      <div class="priority-option" data-priority="2">
+        <span class="priority-option-badge p2">P2</span>
+        <span>중간</span>
+      </div>
+      <div class="priority-option" data-priority="3">
+        <span class="priority-option-badge p3">P3</span>
+        <span>낮음</span>
+      </div>
+      <div class="priority-option remove" data-priority="null">
+        <span>✕ 제거</span>
+      </div>
+    `;
+    return picker;
+  }
+
+  function showPriorityPicker(wrapper, currentPriority) {
+    closePriorityPicker();
+
+    const picker = createPriorityPicker();
+    wrapper.style.position = 'relative';
+    wrapper.appendChild(picker);
+
+    setTimeout(() => picker.classList.add('active'), 10);
+
+    picker.addEventListener('click', (e) => {
+      const option = e.target.closest('.priority-option');
+      if (!option) return;
+
+      const newPriority = option.dataset.priority === 'null' ? null : parseInt(option.dataset.priority);
+      const url = wrapper.dataset.url;
+
+      setPriority(url, newPriority);
+      updatePriorityUI(wrapper, newPriority);
+
+      const card = wrapper.closest('.idea-card');
+      card.dataset.priority = newPriority === null ? 'unset' : String(newPriority);
+
+      applyFilterAndSort();
+      closePriorityPicker();
+    });
+
+    activePicker = picker;
+  }
+
+  function closePriorityPicker() {
+    if (activePicker) {
+      activePicker.remove();
+      activePicker = null;
+    }
+  }
+
+  function updatePriorityUI(wrapper, priority) {
+    const existingBadge = wrapper.querySelector('.priority-badge');
+    const existingAddBtn = wrapper.querySelector('.priority-add-btn');
+
+    if (priority === null) {
+      if (existingBadge) existingBadge.remove();
+      if (!existingAddBtn) {
+        const addBtn = document.createElement('span');
+        addBtn.className = 'priority-add-btn';
+        addBtn.title = '우선순위 추가';
+        addBtn.textContent = '+';
+        wrapper.appendChild(addBtn);
+      }
+    } else {
+      if (existingAddBtn) existingAddBtn.remove();
+
+      if (existingBadge) {
+        existingBadge.className = `priority-badge priority-${priority}`;
+        existingBadge.dataset.priority = priority;
+        existingBadge.textContent = `P${priority}`;
+        existingBadge.classList.add('updating');
+        setTimeout(() => existingBadge.classList.remove('updating'), 300);
+      } else {
+        const badge = document.createElement('span');
+        badge.className = `priority-badge priority-${priority} updating`;
+        badge.dataset.priority = priority;
+        badge.textContent = `P${priority}`;
+        wrapper.appendChild(badge);
+        setTimeout(() => badge.classList.remove('updating'), 300);
+      }
+    }
+  }
+
+  // ── Initialize priority badges from localStorage ──
+  function initializePriorities() {
+    const priorities = getPriorities();
+
+    ideaCards.forEach(card => {
+      const wrapper = card.querySelector('.priority-wrapper');
+      const url = wrapper.dataset.url;
+      const storedPriority = priorities[url];
+
+      if (storedPriority !== undefined) {
+        updatePriorityUI(wrapper, storedPriority);
+        card.dataset.priority = storedPriority === null ? 'unset' : String(storedPriority);
+      }
+    });
+  }
+
+  // ── Event delegation for priority editing ──
+  document.addEventListener('click', (e) => {
+    const badge = e.target.closest('.priority-badge');
+    const addBtn = e.target.closest('.priority-add-btn');
+    const wrapper = e.target.closest('.priority-wrapper');
+
+    if (badge || addBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const currentPriority = badge ? parseInt(badge.dataset.priority) : null;
+      showPriorityPicker(wrapper, currentPriority);
+    } else if (!e.target.closest('.priority-picker')) {
+      closePriorityPicker();
+    }
+  });
 
   // Filter functionality
   filterBtns.forEach(btn => {
@@ -173,7 +355,7 @@ layout: default
   function applyFilterAndSort() {
     // Filter cards
     ideaCards.forEach(card => {
-      const cardPriority = card.dataset.priority;
+      const cardPriority = getEffectivePriority(card);
       if (currentFilter === 'all' || cardPriority === currentFilter) {
         card.style.display = '';
       } else {
@@ -198,23 +380,25 @@ layout: default
 
       visibleCards.sort((a, b) => {
         if (currentSort === 'priority') {
-          const priorityA = a.dataset.priority === 'unset' ? 999 : parseInt(a.dataset.priority);
-          const priorityB = b.dataset.priority === 'unset' ? 999 : parseInt(b.dataset.priority);
+          const priorityA = getEffectivePriority(a);
+          const priorityB = getEffectivePriority(b);
+          const numA = priorityA === 'unset' ? 999 : parseInt(priorityA);
+          const numB = priorityB === 'unset' ? 999 : parseInt(priorityB);
 
-          if (priorityA !== priorityB) {
-            return priorityA - priorityB; // Lower priority number = higher priority
+          if (numA !== numB) {
+            return numA - numB;
           }
-          // If same priority, sort by date (newest first)
           return parseInt(b.dataset.date) - parseInt(a.dataset.date);
         } else {
-          // Sort by date (newest first)
           return parseInt(b.dataset.date) - parseInt(a.dataset.date);
         }
       });
 
-      // Reorder DOM elements
       visibleCards.forEach(card => grid.appendChild(card));
     });
   }
+
+  // Initialize on load
+  initializePriorities();
 })();
 </script>

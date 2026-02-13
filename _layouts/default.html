@@ -301,6 +301,134 @@
       color: #1e40af;
     }
 
+    /* ── Priority Picker ── */
+    .priority-badge {
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .priority-badge:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .priority-add-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--border-light);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      user-select: none;
+    }
+
+    .priority-add-btn:hover {
+      background: var(--primary-bg);
+      color: var(--primary);
+      border-color: var(--primary-light);
+      transform: scale(1.1);
+    }
+
+    .priority-picker {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-lg);
+      padding: 0.5rem;
+      z-index: 1000;
+      display: none;
+      min-width: 120px;
+    }
+
+    .priority-picker.active {
+      display: block;
+      animation: fadeIn 0.15s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .priority-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .priority-option:hover {
+      background: var(--border-light);
+    }
+
+    .priority-option-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+
+    .priority-option-badge.p1 {
+      background: #fef2f2;
+      color: #991b1b;
+    }
+
+    .priority-option-badge.p2 {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .priority-option-badge.p3 {
+      background: #eff6ff;
+      color: #1e40af;
+    }
+
+    .priority-option.remove {
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+      margin-top: 0.25rem;
+      padding-top: 0.5rem;
+    }
+
+    .priority-badge.updating {
+      animation: pulse 0.3s ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
     /* ── Filter & Sort Controls ── */
     .controls {
       display: flex;

@@ -14,9 +14,13 @@ layout: default
         {% else %}{{ page.status }}
         {% endif %}
       </span>
-      {% if page.priority %}
-      <span class="priority-badge priority-{{ page.priority }}">P{{ page.priority }}</span>
-      {% endif %}
+      <span class="priority-wrapper" data-url="{{ page.url | relative_url }}">
+        {% if page.priority %}
+        <span class="priority-badge priority-{{ page.priority }}" data-priority="{{ page.priority }}">P{{ page.priority }}</span>
+        {% else %}
+        <span class="priority-add-btn" title="우선순위 추가">+</span>
+        {% endif %}
+      </span>
       <span class="idea-date">{{ page.date | date: "%Y년 %m월 %d일" }}</span>
     </div>
     {% if page.tags %}
@@ -35,3 +39,162 @@ layout: default
     {{ content }}
   </div>
 </article>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'idea-vault-priorities';
+
+  let activePicker = null;
+
+  // ── localStorage helpers ──
+  function getPriorities() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : {};
+    } catch (e) {
+      console.error('Failed to load priorities:', e);
+      return {};
+    }
+  }
+
+  function savePriorities(priorities) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(priorities));
+    } catch (e) {
+      console.error('Failed to save priorities:', e);
+    }
+  }
+
+  function setPriority(url, priority) {
+    const priorities = getPriorities();
+    if (priority === null) {
+      delete priorities[url];
+    } else {
+      priorities[url] = priority;
+    }
+    savePriorities(priorities);
+  }
+
+  // ── Priority Picker ──
+  function createPriorityPicker() {
+    const picker = document.createElement('div');
+    picker.className = 'priority-picker';
+    picker.innerHTML = `
+      <div class="priority-option" data-priority="1">
+        <span class="priority-option-badge p1">P1</span>
+        <span>높음</span>
+      </div>
+      <div class="priority-option" data-priority="2">
+        <span class="priority-option-badge p2">P2</span>
+        <span>중간</span>
+      </div>
+      <div class="priority-option" data-priority="3">
+        <span class="priority-option-badge p3">P3</span>
+        <span>낮음</span>
+      </div>
+      <div class="priority-option remove" data-priority="null">
+        <span>✕ 제거</span>
+      </div>
+    `;
+    return picker;
+  }
+
+  function showPriorityPicker(wrapper, currentPriority) {
+    closePriorityPicker();
+
+    const picker = createPriorityPicker();
+    wrapper.style.position = 'relative';
+    wrapper.appendChild(picker);
+
+    setTimeout(() => picker.classList.add('active'), 10);
+
+    picker.addEventListener('click', (e) => {
+      const option = e.target.closest('.priority-option');
+      if (!option) return;
+
+      const newPriority = option.dataset.priority === 'null' ? null : parseInt(option.dataset.priority);
+      const url = wrapper.dataset.url;
+
+      setPriority(url, newPriority);
+      updatePriorityUI(wrapper, newPriority);
+      closePriorityPicker();
+    });
+
+    activePicker = picker;
+  }
+
+  function closePriorityPicker() {
+    if (activePicker) {
+      activePicker.remove();
+      activePicker = null;
+    }
+  }
+
+  function updatePriorityUI(wrapper, priority) {
+    const existingBadge = wrapper.querySelector('.priority-badge');
+    const existingAddBtn = wrapper.querySelector('.priority-add-btn');
+
+    if (priority === null) {
+      if (existingBadge) existingBadge.remove();
+      if (!existingAddBtn) {
+        const addBtn = document.createElement('span');
+        addBtn.className = 'priority-add-btn';
+        addBtn.title = '우선순위 추가';
+        addBtn.textContent = '+';
+        wrapper.appendChild(addBtn);
+      }
+    } else {
+      if (existingAddBtn) existingAddBtn.remove();
+
+      if (existingBadge) {
+        existingBadge.className = `priority-badge priority-${priority}`;
+        existingBadge.dataset.priority = priority;
+        existingBadge.textContent = `P${priority}`;
+        existingBadge.classList.add('updating');
+        setTimeout(() => existingBadge.classList.remove('updating'), 300);
+      } else {
+        const badge = document.createElement('span');
+        badge.className = `priority-badge priority-${priority} updating`;
+        badge.dataset.priority = priority;
+        badge.textContent = `P${priority}`;
+        wrapper.appendChild(badge);
+        setTimeout(() => badge.classList.remove('updating'), 300);
+      }
+    }
+  }
+
+  // ── Initialize priority badge from localStorage ──
+  function initializePriority() {
+    const wrapper = document.querySelector('.priority-wrapper');
+    if (!wrapper) return;
+
+    const priorities = getPriorities();
+    const url = wrapper.dataset.url;
+    const storedPriority = priorities[url];
+
+    if (storedPriority !== undefined) {
+      updatePriorityUI(wrapper, storedPriority);
+    }
+  }
+
+  // ── Event delegation for priority editing ──
+  document.addEventListener('click', (e) => {
+    const badge = e.target.closest('.priority-badge');
+    const addBtn = e.target.closest('.priority-add-btn');
+    const wrapper = e.target.closest('.priority-wrapper');
+
+    if (badge || addBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const currentPriority = badge ? parseInt(badge.dataset.priority) : null;
+      showPriorityPicker(wrapper, currentPriority);
+    } else if (!e.target.closest('.priority-picker')) {
+      closePriorityPicker();
+    }
+  });
+
+  // Initialize on load
+  initializePriority();
+})();
+</script>

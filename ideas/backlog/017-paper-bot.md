@@ -3,6 +3,7 @@ layout: idea
 title: "페이퍼 봇 - 전문가·학생을 위한 논문 요약 서비스"
 date: 2026-02-13
 status: backlog
+priority: 1
 author: 정한나
 tags: [AI, 논문, 요약, 학술, 교육]
 summary: "영어 논문 PDF 링크만 넣으면 연구주제-방법-결론을 구조적으로 요약하고, 챗봇으로 추가 질문까지 가능한 AI 논문 어시스턴트"

@@ -3,6 +3,7 @@ layout: idea
 title: "글로벌 인사이트 모닝 브리프 - 해외 테크/디자인 뉴스 3줄 요약"
 date: 2026-02-13
 status: backlog
+priority: 2
 author: 정한나
 tags: [콘텐츠, 뉴스, 큐레이션, 해외, 구독제]
 summary: "매일 아침 해외 테크/디자인/비즈니스 핵심 기사 5개를 선정하여 Fact-Meaning-Action 구조로 3단 요약해주는 프리미엄 뉴스레터"
